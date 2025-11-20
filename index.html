@@ -1,0 +1,67 @@
+<!doctype html>
+
+<html lang="en">
+  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS with SQL GET Data</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- FAVICON LINK -->
+    <link rel="icon" type="image/png" href="./favicon_io/favicon.ico"/>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css" />
+
+    <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.5.1/calcite.css" />
+    
+    <!-- ArcGIS JS -->
+    
+    <script type="module" src="https://js.arcgis.com/calcite-components/2.5.1/calcite.esm.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+  <!-- Header Image -->
+
+  <div id="app-container">
+    <div id="header">
+        <img src="./img/IRSA_header.png" alt="Header Image" id="imgofheader">
+    </div>
+    
+    <div id="mapviewDiv">
+
+      <div id="resultDivPanel">
+        <h2 id="layerTitle" class="result-title"></h2>
+        <p class="result-description">This is Sensor Data of Gates and Gauges coming from MIS Database</p>
+        <div class="radio-group">
+          <input type="radio" id="tableView" name="dataView" value="table" checked>
+          <label for="tableView">Table View</label>
+          <input type="radio" id="chartView" name="dataView" value="chart">
+          <label for="chartView">Chart View</label>
+        </div>
+        <div id="tableContainer"></div>
+        <div id="chartContainer" style="height: 400px; display: none;"></div>
+      </div> 
+      
+    </div> <!-- mapviewDiv ends here -->
+  </div> <!-- app-container ends here -->
+
+    <div id="logoDiv" class="esri-widget">
+        <img src="./img/DP-for-webgis.png" id="logoimg" title="Junaid Sabir WebGIS Developer" alt="Junaid Sabir WebGIS Developer" />
+
+    </div>
+
+    <!-- 1. Load the ArcGIS SDK base script to enable the 'require' AMD function -->
+    <script src="https://js.arcgis.com/4.33/"></script>
+    
+    
+    <script src="main.js"></script>
+</body>
+</html>
