@@ -3,6 +3,7 @@ require([
   "esri/views/MapView",
   "esri/layers/MapImageLayer",
   "esri/layers/FeatureLayer",
+  "esri/layers/ImageryLayer",
   "esri/layers/GroupLayer",
   "esri/widgets/LayerList",
   "esri/widgets/Home",
@@ -14,10 +15,11 @@ require([
   "esri/Basemap",
   "esri/widgets/BasemapGallery",
   "esri/widgets/ScaleBar",
-  "esri/widgets/Compass"
-], function(Map, MapView, MapImageLayer, FeatureLayer, 
+  "esri/widgets/Compass",
+  "esri/widgets/Print"
+], function(Map, MapView, MapImageLayer, FeatureLayer, ImageryLayer,
   GroupLayer, LayerList, Home, Legend, LabelClass, 
-  PopupTemplate, Expand, Print, Basemap, BasemapGallery, ScaleBar, Compass) {
+  PopupTemplate, Expand, Print, Basemap, BasemapGallery, ScaleBar, Compass, Print) {
 
     const resultDivPanel = document.getElementById("resultDivPanel");
     const layerTitleElement = document.getElementById("layerTitle");
@@ -29,19 +31,19 @@ require([
 
     // Dummy data for demonstration
     const dummySensorData = [
-      { date: "2023-01-01", gauge1: 15.2, gauge2: 12.5, gate: 8 },
-      { date: "2023-01-02", gauge1: 16.1, gauge2: 13.0, gate: 7 },
-      { date: "2023-01-03", gauge1: 15.8, gauge2: 12.8, gate: 8 },
-      { date: "2023-01-04", gauge1: 15.5, gauge2: 12.2, gate: 9 },
-      { date: "2023-01-05", gauge1: 16.5, gauge2: 13.1, gate: 7 },
-      { date: "2023-01-06", gauge1: 17.0, gauge2: 13.5, gate: 6 },
-      { date: "2023-01-07", gauge1: 17.2, gauge2: 13.8, gate: 6 },
-      { date: "2023-01-08", gauge1: 16.8, gauge2: 13.4, gate: 7 },
-      { date: "2023-01-09", gauge1: 16.0, gauge2: 13.0, gate: 8 },
-      { date: "2023-01-10", gauge1: 15.4, gauge2: 12.7, gate: 9 },
-      { date: "2023-01-11", gauge1: 15.0, gauge2: 12.4, gate: 9 },
-      { date: "2023-01-12", gauge1: 14.8, gauge2: 12.0, gate: 10 },
-      { date: "2023-01-13", gauge1: 15.1, gauge2: 12.3, gate: 9 },
+      { date: "2025-01-01", Name: 15.2, Place: 12.5, Thing: 8 },
+      { date: "2025-02-02", Name: 16.1, Place: 13.0, Thing: 7 },
+      { date: "2025-03-03", Name: 15.8, Place: 12.8, Thing: 8 },
+      { date: "2025-04-04", Name: 15.5, Place: 12.2, Thing: 9 },
+      { date: "2025-05-05", Name: 16.5, Place: 13.1, Thing: 7 },
+      { date: "2025-06-06", Name: 17.0, Place: 13.5, Thing: 6 },
+      { date: "2025-07-07", Name: 17.2, Place: 13.8, Thing: 6 },
+      { date: "2025-08-08", Name: 16.8, Place: 13.4, Thing: 7 },
+      { date: "2025-09-09", Name: 16.0, Place: 13.0, Thing: 8 },
+      { date: "2025-10-10", Name: 15.4, Place: 12.7, Thing: 9 },
+      { date: "2025-11-11", Name: 15.0, Place: 12.4, Thing: 9 },
+      { date: "2025-12-12", Name: 14.8, Place: 12.0, Thing: 10 },
+      { date: "2026-01-13", Name: 15.1, Place: 12.3, Thing: 9 },
     ];
     const itemsPerPage = 5;
     let currentPage = 1;
@@ -117,20 +119,20 @@ require([
           labels: dummySensorData.map(d => d.date),
           datasets: [
             {
-              label: 'Gauge 1',
-              data: dummySensorData.map(d => d.gauge1),
+              label: 'Name',
+              data: dummySensorData.map(d => d.Name),
               borderColor: 'rgb(75, 192, 192)',
               tension: 0.1
             },
             {
-              label: 'Gauge 2',
-              data: dummySensorData.map(d => d.gauge2),
+              label: 'Place',
+              data: dummySensorData.map(d => d.Place),
               borderColor: 'rgb(255, 99, 132)',
               tension: 0.1
             },
             {
-              label: 'Gate',
-              data: dummySensorData.map(d => d.gate),
+              label: 'Thing',
+              data: dummySensorData.map(d => d.Thing),
               borderColor: 'rgb(54, 162, 235)',
               tension: 0.1
             }
@@ -195,27 +197,27 @@ require([
     }
 
     // Label class for "Labels" action
-    const labelClass = new LabelClass({
-      symbol: {
-        type: "text", // autocasts as new TextSymbol()
-        color: "black",
-        haloColor: "white",
-        haloSize: 1.5,
-        font: {
-          family: "Noto Sans",
-          size: 10,
-        },
-      },
-      labelPlacement: "above-center",
-      labelExpressionInfo: {
-        expression: "$feature.Name || $feature.Zone || $feature.Circle",
-      },
-    });
+    // const labelClass = new LabelClass({
+    //   symbol: {
+    //     type: "text", // autocasts as new TextSymbol()
+    //     color: "black",
+    //     haloColor: "white",
+    //     haloSize: 1.5,
+    //     font: {
+    //       family: "Noto Sans",
+    //       size: 10,
+    //     },
+    //   },
+    //   labelPlacement: "above-center",
+    //   labelExpressionInfo: {
+    //     expression: "$feature.Name || $feature.Zone || $feature.Circle",
+    //   },
+    // });
 
-    // Helper function to toggle labels
-    function setLabels(layer) {
-      layer.labelsVisible = !layer.labelsVisible;
-    }
+    // // Helper function to toggle labels
+    // function setLabels(layer) {
+    //   layer.labelsVisible = !layer.labelsVisible;
+    // }
 
     // Helper function to create and append the Calcite slider
     function createOpacitySlider(item) {
@@ -317,251 +319,159 @@ require([
     
 
     // ~~~~~~~~~ DEFINE LAYERS ~~~~~~~~~~~~~~
-    const layer1 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/1",
-      title: "CJ Link Gauges",
+    // Typical usage
+    const usaLULC = new ImageryLayer({
+      // URL to the imagery service
+      url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/NLCDLandCover2001/ImageServer",
+      title: "National Land Cover Database (NLCD) 2001 - Land Cover Classification",
       visible: true,
-      outFields: ["*"]
+      legendEnabled: true,
+      format: "jpgpng" // server exports in either jpg or png format
     });
-    const layer2 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/2",
-      title: "Chashma Gauges",
-      visible: true,
-      outFields: ["*"]
-    });
-    const layer3 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/3",
-      title: "Chasma",
-      visible: true,
-      outFields: ["*"]
-    });
-    const ChashmaBarrageGroup = new GroupLayer({
-      title: "Chashma Barrage",
-      visible: true,
-      layers: [
-        layer1,
-        layer2,
-        layer3
-      ]
-    });
-    ////////////////////////////////////////////////////////////////
-    const layer33 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/33",
-      title: "Sulemanki Headworks Gauges",
-      visible: false,
-      outFields: ["*"]
-    });
-    const layer34 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/34",
-      title: "Suleimanki Headworks",
-      visible: false,
-      outFields: ["*"]
-    });
-    const SulemankiHeadworksGroup = new GroupLayer({
-      title: "Sulemanki Headworks",
-      visible: false,
-      layers: [
-        layer33,
-        layer34
-      ]
-    });
-    ////////////////////////////////////////////////////////////////
-    const layer36 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/36",
-      title: "Balloki Gauges",
-      visible: false,
-      outFields: ["*"]
-    });
-    const layer37 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/37",
-      title: "Balloki",
-      visible: false,
-      outFields: ["*"]
-    });
-    const BallokiHeadworksGroup = new GroupLayer({
-      title: "Balloki Headworks",
-      visible: false,
-      layers: [
-        layer36,
-        layer37
-      ]
-    });
-    ////////////////////////////////////////////////////////////////
-    const layer42 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/42",
-      title: "Trimmu Gauges",
-      visible: false,
-      outFields: ["*"]
-    });
-    const layer43 = new FeatureLayer({
-      url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/43",
-      title: "Trimmu",
-      visible: false,
-      outFields: ["*"]
-    });
-    const TrimmuHeadworksGroup = new GroupLayer({
-      title: "Trimmu Headworks",
-      visible: false,
-      layers: [
-        layer42,
-        layer43
-      ]
-    });
-    ////////////////////////////////////////////////////////////////
-    const BigGroup = new GroupLayer({
 
-        url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/84",
-        title: "Boundary Layers",
-        visible: true,
-        layers: [
-            new FeatureLayer({
-                url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/85",
-                title: "Irrigation Network",
-                visible: false,
-                outFields: ["*"]
-            }),
-            new FeatureLayer({
-                url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/86",
-                title: "Line of Control (LOC)",
-                visible: true,
-                outFields: ["*"]
-            }),
-            new FeatureLayer({
-                url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/87",
-                title: "Major Cities",
-                visible: true,
-                outFields: ["*"]
-            }),
-            new FeatureLayer({
-                url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/88",
-                title: "River Network",
-                visible: true,
-                outFields: ["*"]
-            }),
-            new FeatureLayer({
-                url: "https://113.197.48.2:6443/arcgis/rest/services/Bak/Layers/MapServer/89",
-                title: "Provincial Boundary",
-                visible: true,
-                outFields: ["*"]
-            })
-        ]
+    const AirportsGroup = new GroupLayer({
+      title: "USA Airports by Scale",
+      visible: true,
+      layers: [                        
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/10",
+          title: "Balloonport",
+          visible: false,
+          outFields: ["*"]
+        }),
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/9",
+          title: "Ultralight",
+          visible: false,
+          outFields: ["*"]
+        }),        
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/8",
+          title: "Gliderport",
+          visible: false,
+          outFields: ["*"]
+        }),
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/7",
+          title: "Seaplane Base",
+          visible: false,
+          outFields: ["*"]
+        }),
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/6",
+          title: "Heliport",
+          visible: false,
+          outFields: ["*"]
+        }),
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/4",
+          title: "Unknown (Airport)",
+          visible: false,
+          outFields: ["*"]
+        }),
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/3",
+          title: "Less than 100,000",
+          visible: false,
+          outFields: ["*"]
+        }),
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/2",
+          title: "100,000 - 999,999",
+          visible: false,
+          outFields: ["*"]
+        }),
+        new FeatureLayer({
+          url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Airports_by_scale/FeatureServer/1",
+          title: "1,000,000 or more",
+          visible: true,
+          outFields: ["*"]
+        })
+      ]
     });
-    ///////////////////////////////////////////////////////////////
-
+    ////////////////////////////////////////////////////////////////
+    
     // ~~~~~~~~~~~ DEFINE POP-UP TEMPLATES ~~~~~~~~~~~~~~~~
-    createPopupTemplate(ChashmaBarrageGroup.layers.getItemAt(0), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(0), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    createPopupTemplate(ChashmaBarrageGroup.layers.getItemAt(1), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(1), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    createPopupTemplate(ChashmaBarrageGroup.layers.getItemAt(2), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(2), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    ////////////////////////////////////////////////////////////////
-    createPopupTemplate(SulemankiHeadworksGroup.layers.getItemAt(0), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(3), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    createPopupTemplate(SulemankiHeadworksGroup.layers.getItemAt(1), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(4), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    ////////////////////////////////////////////////////////////////
-    createPopupTemplate(BallokiHeadworksGroup.layers.getItemAt(0), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(5), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    createPopupTemplate(BallokiHeadworksGroup.layers.getItemAt(1), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(6), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    ////////////////////////////////////////////////////////////////
-    createPopupTemplate(TrimmuHeadworksGroup.layers.getItemAt(0), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(7), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    createPopupTemplate(TrimmuHeadworksGroup.layers.getItemAt(1), [
-      { fieldName: "Name", label: "Name" },
-      { fieldName: "Layer", label: "Layer" },
-      { fieldName: "Site_Id", label: "Site_Id" },
-      { fieldName: "Site", label: "Site" }
+    createPopupTemplate(AirportsGroup.layers.getItemAt(8), [
+      { fieldName: "NAME", label: "Name" },
+      { fieldName: "FACILITY", label: "Facility" },
+      { fieldName: "CITY", label: "City" },
+      { fieldName: "COUNTY", label: "County" },
+      { fieldName: "STATE", label: "State" },
+      { fieldName: "FAA_ID", label: "FAA Id" }
     ]);
-    ////////////////////////////////////////////////////////////////
-    createPopupTemplate(BigGroup.layers.getItemAt(0), [
-        { fieldName: "CanalCode", label: "CanalCode" },
-        { fieldName: "River", label: "River" },
-        { fieldName: "CNLName", label: "CNLName" },
-        { fieldName: "CCAName", label: "CCAName" },
-        { fieldName: "CCACode", label: "CCACode" },
-        { fieldName: "ACZCode", label: "ACZCode" },
-        { fieldName: "ACZName", label: "ACZName" },
-        { fieldName: "Province", label: "Province" },
-        { fieldName: "Basin", label: "Basin" },
-        { fieldName: "Doab", label: "Doab" },
-        { fieldName: "Type", label: "Type" },
-        { fieldName: "W_Type", label: "W_Type" },
-        { fieldName: "Type_New", label: "Type_New" }
-    ]);
-    createPopupTemplate(BigGroup.layers.getItemAt(1), [
-        { fieldName: "Name", label: "Name" },
-        { fieldName: "Id", label: "Id" },
-        { fieldName: "Lenght", label: "Lenght" }
-        
-    ]);
-    createPopupTemplate(BigGroup.layers.getItemAt(2), [
-        { fieldName: "name", label: "name" },
-        { fieldName: "population", label: "population" },
-        { fieldName: "type", label: "type" },
-        { fieldName: "Sel", label: "Sel" },
-        { fieldName: "osm_id", label: "osm_id" }
-    ]);
-    createPopupTemplate(BigGroup.layers.getItemAt(3), [
-        { fieldName: "RiverName", label: "RiverName" },
-        { fieldName: "Remarks", label: "Remarks" },
-        { fieldName: "LenghtKM", label: "LenghtKM" }
-    ]);
-    createPopupTemplate(BigGroup.layers.getItemAt(4), [
-        { fieldName: "Name_0", label: "Name" },
-        { fieldName: "Name_1", label: "Name" },
-        { fieldName: "VARNAME_1", label: "Var Name" },
-        { fieldName: "NL_NAME_1", label: "NL Name" },
-        { fieldName: "HASC_1", label: "hasc" },
-        { fieldName: "CC_1", label: "cc" },
-        { fieldName: "ENGTYPE_1", label: "eng name" },
-        { fieldName: "REMARKS_1", label: "remarks" },
-        { fieldName: "Shape_Area", label: "area" }
-    ]);
+    
     ////////////////////////////////////////////////////////////////
 
     // Create a new Map with the defined layers
     const map = new Map({
       basemap: "satellite",
       layers: [
-        BigGroup,
-        TrimmuHeadworksGroup,
-        BallokiHeadworksGroup,
-        SulemankiHeadworksGroup,
-        ChashmaBarrageGroup
+        usaLULC, AirportsGroup
       ]
     });
 
@@ -569,8 +479,8 @@ require([
     const view = new MapView({
       container: "mapviewDiv",
       map: map,
-      center: [68, 30.6],
-      zoom: 6
+      center: [-100, 38], // Longitude, latitude
+      zoom: 5
     });
 
     // Add Home and LayerList widgets
@@ -644,7 +554,5 @@ require([
 
       // Add the Compass widget to the top left corner of the view
       view.ui.add(compassWidget, "top-right");
-
-    //     printServiceUrl: "https://113.197.48.2:6443/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
 
 });
